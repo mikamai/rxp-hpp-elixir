@@ -40,7 +40,11 @@ defmodule HppRequest do
     hpp_select_stored_card: nil
   )
 
-  def build_hash(secret, request) do
+  def create_request(json_response) do
+    Poison.decode!(json_response, as: %HppRequest{})
+  end
+
+  def build_hash(request, secret) do
     new_request = request
       |> generate_defaults
       |> set_payer_ref

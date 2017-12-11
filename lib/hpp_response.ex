@@ -24,7 +24,11 @@ defmodule HppResponse do
     tss: nil
   )
 
-  def build_hash(secret, response) do
+  def create_response(json_response) do
+    Poison.decode(json_response, as: %HppResponse{})
+  end
+
+  def build_hash(response, secret) do
     %HppResponse{response | sha1hash: generate_hash(secret, response)}
   end
 

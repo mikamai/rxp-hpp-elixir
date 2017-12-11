@@ -18,7 +18,7 @@ defmodule TestHelper do
       amount: "100",
       currency: "EUR",
       timestamp: "20990101120000",
-      sha1hash: "5d8f05abd618e50db4861a61cc940112786474cf",
+      sha1hash: "aafab12dd4f92e0d6e13dd8c3fce93232aedf28a",
       auto_settle_flag: "1",
       comment1: "a-z A-Z 0-9 ' \", + “” ._ - & \\ / @ ! ? % ( )* : £ $ & € # [ ] | = ;ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷ø¤ùúûüýþÿŒŽšœžŸ¥",
       comment2: "Comment Two",
@@ -39,6 +39,38 @@ defmodule TestHelper do
       payer_exist: "0",
       validate_card_only: "0",
       dcc_enable: "0"
+    }
+  end
+
+  def encoded_hpp_request do
+    %HppRequest{
+      merchant_id: "TWVyY2hhbnRJRA==",
+      account: "bXlBY2NvdW50",
+      order_id: "T3JkZXJJRA==",
+      amount: "MTAw",
+      currency: "RVVS",
+      timestamp: "MjA5OTAxMDExMjAwMDA=",
+      sha1hash: "YWFmYWIxMmRkNGY5MmUwZDZlMTNkZDhjM2ZjZTkzMjMyYWVkZjI4YQ==",
+      auto_settle_flag: "MQ==",
+      comment1: "YS16IEEtWiAwLTkgJyAiLCArIOKAnOKAnSAuXyAtICYgXCAvIEAgISA/ICUgKCApKiA6IMKjICQgJiDigqwgIyBbIF0gfCA9IDvDgMOBw4LDg8OEw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5fDmMOZw5rDm8Ocw53DnsOfw6DDocOiw6PDpMOlw6bDp8Oow6nDqsOrw6zDrcOuw6/DsMOxw7LDs8O0w7XDtsO3w7jCpMO5w7rDu8O8w73DvsO/xZLFvcWhxZPFvsW4wqU=",
+      comment2: "Q29tbWVudCBUd28=",
+      return_tss: "MA==",
+      shipping_code: "NTZ8OTg3",
+      shipping_co: "SVJFTEFORA==",
+      billing_code: "MTIzfDU2",
+      billing_co: "SVJFTEFORA==",
+      cust_num: "MTIzNDU2",
+      var_ref: "VmFyaWFibGVSZWY=",
+      prod_id: "UHJvZHVjdElE",
+      hpp_lang: "RU4=",
+      card_payment_button: "U3VibWl0IFBheW1lbnQ=",
+      card_storage_enable: "MA==",
+      offer_save_card: "MA==",
+      payer_ref: "UGF5ZXJSZWY=",
+      pmt_ref: "UGF5bWVudFJlZg==",
+      payer_exist: "MA==",
+      validate_card_only: "MA==",
+      dcc_enable: "MA=="
     }
   end
 

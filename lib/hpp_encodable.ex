@@ -19,6 +19,13 @@ defmodule HppEncodable do
     |> apply_to_all(&Base.decode64!(&1, padding: false))
   end
 
+  def to_json(encodable) do
+    {_, json} = encodable
+      |> Map.from_struct
+      |> Poison.encode
+    json
+  end
+
   defp apply_to_all(response, enc_func) do
     Enum.reduce(
       keys(response),
@@ -27,8 +34,9 @@ defmodule HppEncodable do
         {_, result} = Map.get_and_update(
           encoded_response,
           field,
-          fn(value) ->
-            {value, enc_func.(value_or_empty(value))}
+          fn
+            value when value == nil -> {value, nil}
+            value -> {value, enc_func.(value)}
           end
          )
         result

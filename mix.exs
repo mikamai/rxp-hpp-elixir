@@ -1,4 +1,4 @@
-defmodule RxpHppElixir.Mixfile do
+defmodule RxpHpp.Mixfile do
   use Mix.Project
 
   def project do
