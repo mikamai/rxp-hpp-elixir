@@ -24,7 +24,8 @@ defmodule RxpHppElixir.Mixfile do
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:timex, "~> 3.1"},
       {:secure_random, "~> 0.5"},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:poison, "~> 3.1"}
     ]
   end
 end

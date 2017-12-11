@@ -1,4 +1,7 @@
 defmodule HppResponse do
+  @moduledoc """
+  Holds info for the Realex Hpp response.
+  """
 
   defstruct(
     merchant_id: nil,

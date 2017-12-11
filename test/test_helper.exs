@@ -60,11 +60,29 @@ defmodule TestHelper do
       cavv: "123",
       xid: "654564564",
       comment1: "a-z A-Z 0-9 ' \", + “” ._ - & \\ / @ ! ? % ( )* : £ $ & € # [ ] | = ;ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷ø¤ùúûüýþÿŒŽšœžŸ¥",
-      comment2: "Comment Two",
-      tss: %{
-        tss_2: "TSS_2_VALUE",
-        tss_1: "TSS_1_VALUE"
-      }
+      comment2: "Comment Two"
+    }
+  end
+
+  def encoded_hpp_response do
+    %HppResponse{
+      merchant_id: "dGhlc3RvcmU=",
+      account: "bXlBY2NvdW50",
+      order_id: "T1JENDUzLTEx",
+      amount: "MTAw",
+      authcode: "NzkzNDc=",
+      timestamp: "MjAxMzA4MTQxMjIyMzk=",
+      sha1hash: "ZjA5M2EwYjIzM2RhYTE1ZjJiZjQ0ODg4ZjRmZTc1Y2I2NTJlN2JmMA==",
+      result: "MDA=",
+      message: "U3VjY2Vzc2Z1bA==",
+      cvnresult: "MQ==",
+      pasref: "MzczNzQ2ODI3MzY0Mw==",
+      batchid: "NjU0MzIx",
+      eci: "MQ==",
+      cavv: "MTIz",
+      xid: "NjU0NTY0NTY0",
+      comment1: "YS16IEEtWiAwLTkgJyAiLCArIOKAnOKAnSAuXyAtICYgXCAvIEAgISA/ICUgKCApKiA6IMKjICQgJiDigqwgIyBbIF0gfCA9IDvDgMOBw4LDg8OEw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5fDmMOZw5rDm8Ocw53DnsOfw6DDocOiw6PDpMOlw6bDp8Oow6nDqsOrw6zDrcOuw6/DsMOxw7LDs8O0w7XDtsO3w7jCpMO5w7rDu8O8w73DvsO/xZLFvcWhxZPFvsW4wqU=",
+      comment2: "Q29tbWVudCBUd28"
     }
   end
 end

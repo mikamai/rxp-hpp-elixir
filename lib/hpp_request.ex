@@ -2,6 +2,12 @@ defmodule HppRequest do
   @moduledoc """
   Holds info for the Realex Hpp request.
   """
+
+  @derive {
+    Poison.Encoder,
+    except: [:hpp_fraud_filter_mode, :hpp_select_stored_card, :payer_ref]
+  }
+
   defstruct(
     merchant_id: nil,
     account: nil,
