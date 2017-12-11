@@ -1,0 +1,2 @@
+defmodule HppEncodable do
+end
