@@ -35,15 +35,19 @@ defmodule HppRequest do
   )
 
   def build_hash(secret, request) do
-    hash = request
+    new_request = request
       |> generate_defaults
+      |> set_payer_ref
+
+    hash = new_request
       |> default_seed
-      |> add_payer_ref_and_pmt_ref(request)
-      |> add_fraud_filter_mode(request)
-    %HppRequest{request | sha1hash: Generator.encode_hash(hash, secret)}
+      |> add_payer_ref_and_pmt_ref(new_request)
+      |> add_fraud_filter_mode(new_request)
+
+    %HppRequest{new_request | sha1hash: Generator.encode_hash(hash, secret)}
   end
 
-  def generate_defaults(%HppRequest{timestamp: timestamp, order_id: order_id} = request) do
+  defp generate_defaults(%HppRequest{timestamp: timestamp, order_id: order_id} = request) do
     %HppRequest{
       request |
       timestamp: if timestamp && timestamp != "" do
@@ -59,21 +63,28 @@ defmodule HppRequest do
     }
   end
 
-  def add_fraud_filter_mode(hash_seed, %HppRequest{hpp_fraud_filter_mode: "1"} = request) do
-    [hash_seed, request.hpp_fraud_filter_mode]
-    |> Enum.join(".")
+  defp set_payer_ref(%HppRequest{hpp_select_stored_card: hpp_select_stored_card} = request) do
+    if hpp_select_stored_card && hpp_select_stored_card != "" do
+      %HppRequest{request| payer_ref: hpp_select_stored_card}
+    else
+      request
+    end
   end
 
-  def add_fraud_filter_mode(hash_seed, _) do
-    hash_seed
+  defp add_fraud_filter_mode(hash_seed, %HppRequest{hpp_fraud_filter_mode: hpp_fraud_filter_mode}) do
+    if hpp_fraud_filter_mode && hpp_fraud_filter_mode != "" do
+      Enum.join [hash_seed, hpp_fraud_filter_mode], "."
+    else
+      hash_seed
+    end
   end
 
-  def add_payer_ref_and_pmt_ref(hash_seed, %HppRequest{card_storage_enable: "1", payer_ref: payer_ref, pmt_ref: pmt_ref} = request) do
+  defp add_payer_ref_and_pmt_ref(hash_seed, %HppRequest{card_storage_enable: "1", payer_ref: payer_ref, pmt_ref: pmt_ref}) do
     payer_and_payment = [payer_ref || "", pmt_ref || ""]
     Enum.join [hash_seed, Enum.join(payer_and_payment, ".")], "."
   end
 
-  def add_payer_ref_and_pmt_ref(hash_seed, %HppRequest{hpp_select_stored_card: hpp_select_stored_card, payer_ref: payer_ref, pmt_ref: pmt_ref}) do
+  defp add_payer_ref_and_pmt_ref(hash_seed, %HppRequest{hpp_select_stored_card: hpp_select_stored_card, payer_ref: payer_ref, pmt_ref: pmt_ref}) do
     if !hpp_select_stored_card || hpp_select_stored_card == "" do
       hash_seed
     else
@@ -81,15 +92,7 @@ defmodule HppRequest do
     end
   end
 
-  @doc """
-  Creates a default seed given an HppRequest
-
-  ## Examples
-      iex> req = %HppRequest({timestamp: "12345678912345", merchant_id: "test"})
-      iex> HppRequest.default_seed req
-      "12345678912345.test..."
-  """
-  def default_seed(%HppRequest{timestamp: timestamp, merchant_id: merchant_id, order_id: order_id, amount: amount, currency: currency}) do
+  defp default_seed(%HppRequest{timestamp: timestamp, merchant_id: merchant_id, order_id: order_id, amount: amount, currency: currency}) do
     [
       timestamp,
       merchant_id,
@@ -97,7 +100,7 @@ defmodule HppRequest do
       amount,
       currency
     ]
-    |> Enum.map(fn(x) -> x || "" end)
+    |> Enum.map(&HppEncodable.value_or_empty/1)
     |> Enum.join(".")
   end
 end

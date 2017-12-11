@@ -20,4 +20,26 @@ defmodule HppResponse do
     comment2: nil,
     tss: nil
   )
+
+  def build_hash(secret, response) do
+    %HppResponse{response | sha1hash: generate_hash(secret, response)}
+  end
+
+  def valid_hash?(secret, %HppResponse{sha1hash: sha1hash} = response) do
+    generate_hash(secret, response) == sha1hash
+  end
+
+  def generate_hash(secret, %HppResponse{timestamp: timestamp, merchant_id: merchant_id, order_id: order_id, result: result, message: message, pasref: pasref, authcode: authcode}) do
+    [
+      timestamp,
+      merchant_id,
+      order_id,
+      result,
+      message,
+      pasref,
+      authcode
+    ]
+    |> Enum.map(&HppEncodable.value_or_empty/1)
+    |> Generator.encode_hash(secret)
+  end
 end

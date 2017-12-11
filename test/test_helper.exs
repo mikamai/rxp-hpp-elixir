@@ -41,4 +41,30 @@ defmodule TestHelper do
       dcc_enable: "0"
     }
   end
+
+  def valid_hpp_response do
+    %HppResponse{
+      merchant_id: "thestore",
+      account: "myAccount",
+      order_id: "ORD453-11",
+      amount: "100",
+      authcode: "79347",
+      timestamp: "20130814122239",
+      sha1hash: "f093a0b233daa15f2bf44888f4fe75cb652e7bf0",
+      result: "00",
+      message: "Successful",
+      cvnresult: "1",
+      pasref: "3737468273643",
+      batchid: "654321",
+      eci: "1",
+      cavv: "123",
+      xid: "654564564",
+      comment1: "a-z A-Z 0-9 ' \", + “” ._ - & \\ / @ ! ? % ( )* : £ $ & € # [ ] | = ;ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷ø¤ùúûüýþÿŒŽšœžŸ¥",
+      comment2: "Comment Two",
+      tss: %{
+        tss_2: "TSS_2_VALUE",
+        tss_1: "TSS_1_VALUE"
+      }
+    }
+  end
 end
