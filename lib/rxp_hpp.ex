@@ -11,34 +11,39 @@ defmodule RxpHpp do
     hpp_request
     |> HppRequest.build_hash(secret)
     |> HppEncodable.encode
-    |> HppEncodable.to_json
+    |> HppRequestJsonWrappper.from_hpp_request
+    |> Poison.encode!
   end
 
-  def request_from_json(json_request, true) do
-    json_request
+  def request_from_json(json_wrapped_hpp_request, true) do
+    json_wrapped_hpp_request
     |> request_from_json(false)
     |> HppEncodable.decode
   end
 
-  def request_from_json(json_request, false) do
-    HppRequest.create_request json_request
+  def request_from_json(json_wrapped_hpp_request, false) do
+    json_wrapped_hpp_request
+    |> Helper.read_as(%HppRequestJsonWrappper{})
+    |> HppRequestJsonWrappper.to_hpp_request
   end
 
-  def response_to_json(hpp_response, secret) do
+  def response_to_json(secret, hpp_response) do
     hpp_response
     |> HppResponse.build_hash(secret)
     |> HppEncodable.encode
-    |> HppEncodable.to_json
+    |> HppResponseJsonWrappper.from_hpp_response
+    |> Poison.encode!
   end
 
-  def response_from_json(json_response, true) do
-    json_response
+  def response_from_json(json_wrapped_hpp_response, true) do
+    json_wrapped_hpp_response
     |> response_from_json(false)
     |> HppEncodable.decode
   end
 
-  def response_from_json(json_response, false) do
-    HppResponse.create_response json_response
-    # TODO : add validate_response
+  def response_from_json(json_wrapped_hpp_response, false) do
+    json_wrapped_hpp_response
+    |> Helper.read_as(%HppResponseJsonWrappper{})
+    |> HppResponseJsonWrappper.to_hpp_response
   end
 end

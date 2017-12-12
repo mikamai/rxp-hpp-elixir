@@ -24,10 +24,6 @@ defmodule HppResponse do
     tss: nil
   )
 
-  def create_response(json_response) do
-    Poison.decode(json_response, as: %HppResponse{})
-  end
-
   def build_hash(response, secret) do
     %HppResponse{response | sha1hash: generate_hash(secret, response)}
   end
@@ -46,7 +42,7 @@ defmodule HppResponse do
       pasref,
       authcode
     ]
-    |> Enum.map(&HppEncodable.value_or_empty/1)
+    |> Enum.map(&Helper.value_or_empty/1)
     |> Generator.encode_hash(secret)
   end
 end

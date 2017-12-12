@@ -1,38 +1,50 @@
 defmodule HppEncodable do
+  @moduledoc """
+  HppEncodable hold common behaviour applied
+  to HppRequest and HppResponse structs.
 
-  def keys(encodable) do
-    [_| actual_keys] = Map.keys encodable
-    actual_keys
-  end
+  Includes: reading from json string, encoding and decoding
+  """
 
-  def value_or_empty(value) do
-    value || ""
-  end
+  @doc """
+  `encode` apply Base64 encoding to the given encodable struct
 
+  ## Examples
+
+      iex> request = %HppRequest{account: "myAccount"}
+      iex> encoded_request = HppEncodable.encode(request)
+      iex> %HppRequest{account: account} = encoded_request
+      iex> account
+      "bXlBY2NvdW50"
+  """
   def encode(encodable) do
     encodable
     |> apply_to_all(&Base.encode64/1)
   end
 
+  @doc """
+  `decode` decode a Base64 encoded encodable struct
+
+  ## Examples
+
+      iex> request = %HppRequest{account: "bXlBY2NvdW50"}
+      iex> decoded_request = HppEncodable.decode(request)
+      iex> %HppRequest{account: account} = decoded_request
+      iex> account
+      "myAccount"
+  """
   def decode(encodable) do
     encodable
     |> apply_to_all(&Base.decode64!(&1, padding: false))
   end
 
-  def to_json(encodable) do
-    {_, json} = encodable
-      |> Map.from_struct
-      |> Poison.encode
-    json
-  end
-
-  defp apply_to_all(response, enc_func) do
+  defp apply_to_all(encodable, enc_func) do
     Enum.reduce(
-      keys(response),
-      response,
-      fn(field, encoded_response) ->
+      Helper.keys(encodable),
+      encodable,
+      fn(field, encoded_encodable) ->
         {_, result} = Map.get_and_update(
-          encoded_response,
+          encoded_encodable,
           field,
           fn
             value when value == nil -> {value, nil}

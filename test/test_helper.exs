@@ -42,6 +42,16 @@ defmodule TestHelper do
     }
   end
 
+  def json_wrapped_valid_hpp_request do
+    request = HppRequestJsonWrappper.from_hpp_request valid_hpp_request()
+    %HppRequestJsonWrappper{
+      request |
+      HPP_FRAUD_FILTER_MODE: nil,
+      HPP_SELECT_STORED_CARD: nil,
+      PAYER_REF: nil
+    }
+  end
+
   def encoded_hpp_request do
     %HppRequest{
       merchant_id: "TWVyY2hhbnRJRA==",
@@ -74,6 +84,16 @@ defmodule TestHelper do
     }
   end
 
+  def json_wrapped_encoded_hpp_request do
+    request = HppRequestJsonWrappper.from_hpp_request encoded_hpp_request()
+    %HppRequestJsonWrappper{
+      request |
+      HPP_FRAUD_FILTER_MODE: nil,
+      HPP_SELECT_STORED_CARD: nil,
+      PAYER_REF: nil
+    }
+  end
+
   def valid_hpp_response do
     %HppResponse{
       merchant_id: "thestore",
@@ -82,7 +102,7 @@ defmodule TestHelper do
       amount: "100",
       authcode: "79347",
       timestamp: "20130814122239",
-      sha1hash: "f093a0b233daa15f2bf44888f4fe75cb652e7bf0",
+      sha1hash: "c452c179d4d3aafd1ee409ee595c426ff0240e25",
       result: "00",
       message: "Successful",
       cvnresult: "1",
@@ -96,6 +116,10 @@ defmodule TestHelper do
     }
   end
 
+  def json_wrapped_valid_hpp_response do
+    HppResponseJsonWrappper.from_hpp_response valid_hpp_response()
+  end
+
   def encoded_hpp_response do
     %HppResponse{
       merchant_id: "dGhlc3RvcmU=",
@@ -104,7 +128,7 @@ defmodule TestHelper do
       amount: "MTAw",
       authcode: "NzkzNDc=",
       timestamp: "MjAxMzA4MTQxMjIyMzk=",
-      sha1hash: "ZjA5M2EwYjIzM2RhYTE1ZjJiZjQ0ODg4ZjRmZTc1Y2I2NTJlN2JmMA==",
+      sha1hash: "YzQ1MmMxNzlkNGQzYWFmZDFlZTQwOWVlNTk1YzQyNmZmMDI0MGUyNQ==",
       result: "MDA=",
       message: "U3VjY2Vzc2Z1bA==",
       cvnresult: "MQ==",
@@ -116,5 +140,9 @@ defmodule TestHelper do
       comment1: "YS16IEEtWiAwLTkgJyAiLCArIOKAnOKAnSAuXyAtICYgXCAvIEAgISA/ICUgKCApKiA6IMKjICQgJiDigqwgIyBbIF0gfCA9IDvDgMOBw4LDg8OEw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5fDmMOZw5rDm8Ocw53DnsOfw6DDocOiw6PDpMOlw6bDp8Oow6nDqsOrw6zDrcOuw6/DsMOxw7LDs8O0w7XDtsO3w7jCpMO5w7rDu8O8w73DvsO/xZLFvcWhxZPFvsW4wqU=",
       comment2: "Q29tbWVudCBUd28"
     }
+  end
+
+  def json_wrapped_encoded_hpp_response do
+    HppResponseJsonWrappper.from_hpp_response encoded_hpp_response()
   end
 end

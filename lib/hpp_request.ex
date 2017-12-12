@@ -3,11 +3,6 @@ defmodule HppRequest do
   Holds info for the Realex Hpp request.
   """
 
-  @derive {
-    Poison.Encoder,
-    except: [:hpp_fraud_filter_mode, :hpp_select_stored_card, :payer_ref]
-  }
-
   defstruct(
     merchant_id: nil,
     account: nil,
@@ -39,10 +34,6 @@ defmodule HppRequest do
     hpp_fraud_filter_mode: nil,
     hpp_select_stored_card: nil
   )
-
-  def create_request(json_response) do
-    Poison.decode!(json_response, as: %HppRequest{})
-  end
 
   def build_hash(request, secret) do
     new_request = request
@@ -110,7 +101,7 @@ defmodule HppRequest do
       amount,
       currency
     ]
-    |> Enum.map(&HppEncodable.value_or_empty/1)
+    |> Enum.map(&Helper.value_or_empty/1)
     |> Enum.join(".")
   end
 end
