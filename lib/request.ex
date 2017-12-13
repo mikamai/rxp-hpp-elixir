@@ -8,10 +8,10 @@ defmodule RxpHpp.Request do
   defstruct(
     merchant_id: "",
     account: "",
-    order_id: "",
+    order_id: nil,
     amount: "",
     currency: "",
-    timestamp: "",
+    timestamp: nil,
     sha1hash: "",
     auto_settle_flag: "",
     comment1: "",
