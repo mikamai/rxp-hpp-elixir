@@ -48,7 +48,7 @@ defmodule HppEncodable do
           field,
           fn
             value when value == nil -> {value, nil}
-            value -> {value, enc_func.(value)}
+            value -> {value, enc_func.("#{value}")}
           end
          )
         result
