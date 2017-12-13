@@ -1,17 +1,16 @@
 ExUnit.start()
 
 defmodule TestHelper do
-
   def valid_hpp_request(with_card_storage)do
     if with_card_storage do
-      %HppRequest{valid_hpp_request() | card_storage_enable: "1", offer_save_card: "1"}
+      %RxpHpp.Request{valid_hpp_request() | card_storage_enable: "1", offer_save_card: "1"}
     else
       valid_hpp_request()
     end
   end
 
   def valid_hpp_request do
-    %HppRequest{
+    %RxpHpp.Request{
       merchant_id: "MerchantID",
       account: "myAccount",
       order_id: "OrderID",
@@ -43,8 +42,8 @@ defmodule TestHelper do
   end
 
   def json_wrapped_valid_hpp_request do
-    request = HppRequestJsonWrappper.from_hpp_request valid_hpp_request()
-    %HppRequestJsonWrappper{
+    request = RxpHpp.StructKeyMapper.from valid_hpp_request(), %RxpHpp.RequestJsonWrapper{}
+    %RxpHpp.RequestJsonWrapper{
       request |
       HPP_FRAUD_FILTER_MODE: nil,
       HPP_SELECT_STORED_CARD: nil,
@@ -53,7 +52,7 @@ defmodule TestHelper do
   end
 
   def encoded_hpp_request do
-    %HppRequest{
+    %RxpHpp.Request{
       merchant_id: "TWVyY2hhbnRJRA==",
       account: "bXlBY2NvdW50",
       order_id: "T3JkZXJJRA==",
@@ -85,8 +84,8 @@ defmodule TestHelper do
   end
 
   def json_wrapped_encoded_hpp_request do
-    request = HppRequestJsonWrappper.from_hpp_request encoded_hpp_request()
-    %HppRequestJsonWrappper{
+    request = RxpHpp.StructKeyMapper.from encoded_hpp_request(), %RxpHpp.RequestJsonWrapper{}
+    %RxpHpp.RequestJsonWrapper{
       request |
       HPP_FRAUD_FILTER_MODE: nil,
       HPP_SELECT_STORED_CARD: nil,
@@ -95,7 +94,7 @@ defmodule TestHelper do
   end
 
   def valid_hpp_response do
-    %HppResponse{
+    %RxpHpp.Response{
       merchant_id: "thestore",
       account: "myAccount",
       order_id: "ORD453-11",
@@ -117,11 +116,11 @@ defmodule TestHelper do
   end
 
   def json_wrapped_valid_hpp_response do
-    HppResponseJsonWrappper.from_hpp_response valid_hpp_response()
+    RxpHpp.StructKeyMapper.from valid_hpp_response(), %RxpHpp.ResponseJsonWrapper{}
   end
 
   def encoded_hpp_response do
-    %HppResponse{
+    %RxpHpp.Response{
       merchant_id: "dGhlc3RvcmU=",
       account: "bXlBY2NvdW50",
       order_id: "T1JENDUzLTEx",
@@ -143,6 +142,6 @@ defmodule TestHelper do
   end
 
   def json_wrapped_encoded_hpp_response do
-    HppResponseJsonWrappper.from_hpp_response encoded_hpp_response()
+    RxpHpp.StructKeyMapper.from encoded_hpp_response(), %RxpHpp.ResponseJsonWrapper{}
   end
 end

@@ -1,4 +1,6 @@
-defmodule HppRequest do
+defmodule RxpHpp.Request do
+  alias RxpHpp.Common
+  alias RxpHpp.Generator
   @moduledoc """
   Holds info for the Realex Hpp request.
   """
@@ -45,34 +47,26 @@ defmodule HppRequest do
       |> add_payer_ref_and_pmt_ref(new_request)
       |> add_fraud_filter_mode(new_request)
 
-    %HppRequest{new_request | sha1hash: Generator.encode_hash(hash, secret)}
+    %RxpHpp.Request{new_request | sha1hash: Generator.encode_hash(hash, secret)}
   end
 
-  defp generate_defaults(%HppRequest{timestamp: timestamp, order_id: order_id} = request) do
-    %HppRequest{
+  defp generate_defaults(%RxpHpp.Request{timestamp: timestamp, order_id: order_id} = request) do
+    %RxpHpp.Request{
       request |
-      timestamp: if timestamp && timestamp != "" do
-        timestamp
-      else
-        Generator.timestamp
-      end,
-      order_id: if order_id && order_id != "" do
-        order_id
-      else
-        Generator.order_id
-      end
+      timestamp: Common.value_or_default(timestamp, Generator.timestamp),
+      order_id: Common.value_or_default(order_id, Generator.order_id)
     }
   end
 
-  defp set_payer_ref(%HppRequest{hpp_select_stored_card: hpp_select_stored_card} = request) do
+  defp set_payer_ref(%RxpHpp.Request{hpp_select_stored_card: hpp_select_stored_card} = request) do
     if hpp_select_stored_card && hpp_select_stored_card != "" do
-      %HppRequest{request| payer_ref: hpp_select_stored_card}
+      %RxpHpp.Request{request| payer_ref: hpp_select_stored_card}
     else
       request
     end
   end
 
-  defp add_fraud_filter_mode(hash_seed, %HppRequest{hpp_fraud_filter_mode: hpp_fraud_filter_mode}) do
+  defp add_fraud_filter_mode(hash_seed, %RxpHpp.Request{hpp_fraud_filter_mode: hpp_fraud_filter_mode}) do
     if hpp_fraud_filter_mode && hpp_fraud_filter_mode != "" do
       Enum.join [hash_seed, hpp_fraud_filter_mode], "."
     else
@@ -80,12 +74,12 @@ defmodule HppRequest do
     end
   end
 
-  defp add_payer_ref_and_pmt_ref(hash_seed, %HppRequest{card_storage_enable: "1", payer_ref: payer_ref, pmt_ref: pmt_ref}) do
+  defp add_payer_ref_and_pmt_ref(hash_seed, %RxpHpp.Request{card_storage_enable: "1", payer_ref: payer_ref, pmt_ref: pmt_ref}) do
     payer_and_payment = [payer_ref || "", pmt_ref || ""]
     Enum.join [hash_seed, Enum.join(payer_and_payment, ".")], "."
   end
 
-  defp add_payer_ref_and_pmt_ref(hash_seed, %HppRequest{hpp_select_stored_card: hpp_select_stored_card, payer_ref: payer_ref, pmt_ref: pmt_ref}) do
+  defp add_payer_ref_and_pmt_ref(hash_seed, %RxpHpp.Request{hpp_select_stored_card: hpp_select_stored_card, payer_ref: payer_ref, pmt_ref: pmt_ref}) do
     if !hpp_select_stored_card || hpp_select_stored_card == "" do
       hash_seed
     else
@@ -93,7 +87,7 @@ defmodule HppRequest do
     end
   end
 
-  defp default_seed(%HppRequest{timestamp: timestamp, merchant_id: merchant_id, order_id: order_id, amount: amount, currency: currency}) do
+  defp default_seed(%RxpHpp.Request{timestamp: timestamp, merchant_id: merchant_id, order_id: order_id, amount: amount, currency: currency}) do
     [
       timestamp,
       merchant_id,
@@ -101,7 +95,7 @@ defmodule HppRequest do
       amount,
       currency
     ]
-    |> Enum.map(&Helper.value_or_empty/1)
+    |> Enum.map(&Common.value_or_default/1)
     |> Enum.join(".")
   end
 end

@@ -1,7 +1,9 @@
-defmodule HppEncodable do
+defmodule RxpHpp.Encodable do
+  alias RxpHpp.StructKeyMapper.Helper
+
   @moduledoc """
-  HppEncodable hold common behaviour applied
-  to HppRequest and HppResponse structs.
+  Encodable hold common behaviour applied
+  to Request and Response structs.
 
   Includes: reading from json string, encoding and decoding
   """
@@ -11,9 +13,9 @@ defmodule HppEncodable do
 
   ## Examples
 
-      iex> request = %HppRequest{account: "myAccount"}
-      iex> encoded_request = HppEncodable.encode(request)
-      iex> %HppRequest{account: account} = encoded_request
+      iex> request = %RxpHpp.Request{account: "myAccount"}
+      iex> encoded_request = RxpHpp.Encodable.encode(request)
+      iex> %RxpHpp.Request{account: account} = encoded_request
       iex> account
       "bXlBY2NvdW50"
   """
@@ -27,9 +29,9 @@ defmodule HppEncodable do
 
   ## Examples
 
-      iex> request = %HppRequest{account: "bXlBY2NvdW50"}
-      iex> decoded_request = HppEncodable.decode(request)
-      iex> %HppRequest{account: account} = decoded_request
+      iex> request = %RxpHpp.Request{account: "bXlBY2NvdW50"}
+      iex> decoded_request = RxpHpp.Encodable.decode(request)
+      iex> %RxpHpp.Request{account: account} = decoded_request
       iex> account
       "myAccount"
   """

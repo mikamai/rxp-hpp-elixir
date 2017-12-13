@@ -1,49 +1,63 @@
 defmodule RxpHpp do
+  alias RxpHpp.Request
+  alias RxpHpp.Response
+  alias RxpHpp.RequestJsonWrapper
+  alias RxpHpp.ResponseJsonWrapper
+  alias RxpHpp.Encodable
+  alias RxpHpp.StructKeyMapper
   @moduledoc """
-  Documentation for RxpHpp.
+  Allow to create / parse requests and response
   """
 
   @doc """
-  request to json.
-
+  Given an `RxpHpp.Request` and a secret returns its JSON base64 encoded form.
   """
   def request_to_json(hpp_request, secret) do
     hpp_request
-    |> HppRequest.build_hash(secret)
-    |> HppEncodable.encode
-    |> HppRequestJsonWrappper.from_hpp_request
+    |> Request.build_hash(secret)
+    |> Encodable.encode
+    |> StructKeyMapper.from(%Request{})
     |> Poison.encode!
   end
 
-  def request_from_json(json_wrapped_hpp_request, true) do
-    json_wrapped_hpp_request
+  @doc """
+  Returns a decoded `RxpHpp.Response` from its JSON rappresentation.
+  """
+  def request_from_json(out_hpp_request, true) do
+    out_hpp_request
     |> request_from_json(false)
-    |> HppEncodable.decode
+    |> Encodable.decode
   end
 
-  def request_from_json(json_wrapped_hpp_request, false) do
-    json_wrapped_hpp_request
-    |> Helper.read_as(%HppRequestJsonWrappper{})
-    |> HppRequestJsonWrappper.to_hpp_request
+  def request_from_json(out_hpp_request, false) do
+    out_hpp_request
+    |> Poison.decode!(as: %RequestJsonWrapper{})
+    |> StructKeyMapper.to(%Request{})
   end
 
+  @doc """
+  Given an RxpHpp.Response and a secret returns its JSON base64 encoded form.
+  """
   def response_to_json(hpp_response, secret) do
     hpp_response
-    |> HppResponse.build_hash(secret)
-    |> HppEncodable.encode
-    |> HppResponseJsonWrappper.from_hpp_response
+    |> Response.build_hash(secret)
+    |> Encodable.encode
+    |> StructKeyMapper.from(%Response{})
     |> Poison.encode!
   end
 
-  def response_from_json(json_wrapped_hpp_response, true) do
-    json_wrapped_hpp_response
+  @doc """
+  Returns a decoded `RxpHpp.Response` from its JSON rappresentation.
+  """
+  def response_from_json(out_hpp_response, true) do
+    out_hpp_response
     |> response_from_json(false)
-    |> HppEncodable.decode
+    |> Encodable.decode
   end
 
-  def response_from_json(json_wrapped_hpp_response, false) do
-    json_wrapped_hpp_response
-    |> Helper.read_as(%HppResponseJsonWrappper{})
-    |> HppResponseJsonWrappper.to_hpp_response
+  def response_from_json(out_hpp_response, false) do
+    out_hpp_response
+    |> Poison.decode!(as: %ResponseJsonWrapper{})
+    |> StructKeyMapper.to(%Response{})
   end
 end

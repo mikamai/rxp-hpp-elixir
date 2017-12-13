@@ -1,25 +1,14 @@
-defmodule Helper do
+defmodule RxpHpp.StructKeyMapper.Helper do
   @moduledoc """
-  Helper methods
+    Helper functions for StructKeyMapper
   """
-  @doc """
-  `read_as` read json and returns a struct
-
-  ## Examples
-
-      iex> Helper.read_as ~s({"merchant_id": "test-merch"}), %HppRequest{}
-      %HppRequest{merchant_id: "test-merch"}
-  """
-  def read_as(json, encodable) do
-    Poison.decode! json, as: encodable
-  end
 
   @doc """
   `keys` return all the keys from the given struct
 
   ## Examples
 
-      iex> Helper.keys %HppRequest{merchant_id: "test-merch"}
+      iex> RxpHpp.StructKeyMapper.Helper.keys %Request{merchant_id: "test-merch"}
       [:account, :amount, :auto_settle_flag, :billing_co, :billing_code,
         :card_payment_button, :card_storage_enable, :comment1, :comment2, :currency,
         :cust_num, :dcc_enable, :hpp_fraud_filter_mode, :hpp_lang,
@@ -35,7 +24,7 @@ defmodule Helper do
 
   ## Examples
 
-      iex> Helper.upcase_atom :test
+      iex> RxpHpp.StructKeyMapper.Helper.upcase_atom :test
       :TEST
 
   """
@@ -48,28 +37,12 @@ defmodule Helper do
 
   ## Examples
 
-      iex> Helper.downcase_atom :TEST
+      iex> RxpHpp.StructKeyMapper.Helper.downcase_atom :TEST
       :test
 
   """
   def downcase_atom(field) do
     map_atom field, &String.downcase/1
-  end
-
-  @doc """
-  Returns value if not nil empty string otherwise
-
-  ## Examples
-
-      iex> Helper.value_or_empty "test"
-      "test"
-
-      iex> Helper.value_or_empty nil
-      ""
-
-  """
-  def value_or_empty(value) do
-    value || ""
   end
 
   defp map_atom(field, func) do

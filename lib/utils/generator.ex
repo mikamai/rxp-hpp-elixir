@@ -1,6 +1,6 @@
-defmodule Generator do
+defmodule RxpHpp.Generator do
   @moduledoc """
-  Documentation for Generator.
+  Documentation for RxpHpp.Generator.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Generator do
 
   ## Examples
 
-      iex> Generator.encode_hash "test-seed", "test-secret"
+      iex> RxpHpp.Generator.encode_hash "test-seed", "test-secret"
       "b6da728dd749cb5f832faaeceb32199db9faf422"
 
   """

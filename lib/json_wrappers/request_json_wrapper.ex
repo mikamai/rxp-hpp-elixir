@@ -1,5 +1,7 @@
-defmodule HppRequestJsonWrappper do
-
+defmodule RxpHpp.RequestJsonWrapper do
+  @moduledoc """
+    Used to wrap an RxpHpp.Request before being returned as JSON
+  """
   @derive {
     Poison.Encoder,
     except: [:HPP_FRAUD_FILTER_MODE, :HPP_SELECT_STORED_CARD, :PAYER_REF]
@@ -35,24 +37,4 @@ defmodule HppRequestJsonWrappper do
     DCC_ENABLE: "",
     HPP_FRAUD_FILTER_MODE: "",
     HPP_SELECT_STORED_CARD: "")
-
-  def from_hpp_request(hpp_request) do
-    Enum.reduce(
-      Helper.keys(hpp_request),
-      %HppRequestJsonWrappper{},
-      fn (field, hpp_request_json_wrapped) ->
-        Map.put hpp_request_json_wrapped, Helper.upcase_atom(field), Map.get(hpp_request, field)
-      end
-    )
-  end
-
-  def to_hpp_request(hpp_request_json_wrapped) do
-    Enum.reduce(
-      Helper.keys(hpp_request_json_wrapped),
-      %HppRequest{},
-      fn (field, hpp_request) ->
-        Map.put hpp_request, Helper.downcase_atom(field), Map.get(hpp_request_json_wrapped, field)
-      end
-    )
-  end
 end
