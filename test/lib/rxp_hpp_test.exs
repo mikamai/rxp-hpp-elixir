@@ -5,7 +5,7 @@ defmodule RxpHppTest do
 
   test "request_to_json parses correct" do
     expected_request = valid_hpp_request()
-    json = RxpHpp.request_to_json "mysecret", expected_request
+    json = RxpHpp.request_to_json expected_request, "mysecret"
     converted_request = RxpHpp.request_from_json json, true
     expected_json = Poison.encode! HppRequestJsonWrappper.from_hpp_request(expected_request)
     actual_json   = Poison.encode! HppRequestJsonWrappper.from_hpp_request(converted_request)
@@ -32,7 +32,7 @@ defmodule RxpHppTest do
 
   test "response_to_json parses correct" do
     expected_response = valid_hpp_response()
-    input_json  = RxpHpp.response_to_json "mysecret", expected_response
+    input_json  = RxpHpp.response_to_json expected_response, "mysecret"
     converted_response = RxpHpp.response_from_json input_json, true
     expected_json = Poison.encode! HppResponseJsonWrappper.from_hpp_response(expected_response)
     actual_json   = Poison.encode! HppResponseJsonWrappper.from_hpp_response(converted_response)

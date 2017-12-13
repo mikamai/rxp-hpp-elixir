@@ -7,7 +7,7 @@ defmodule RxpHpp do
   request to json.
 
   """
-  def request_to_json(secret, hpp_request) do
+  def request_to_json(hpp_request, secret) do
     hpp_request
     |> HppRequest.build_hash(secret)
     |> HppEncodable.encode
@@ -27,7 +27,7 @@ defmodule RxpHpp do
     |> HppRequestJsonWrappper.to_hpp_request
   end
 
-  def response_to_json(secret, hpp_response) do
+  def response_to_json(hpp_response, secret) do
     hpp_response
     |> HppResponse.build_hash(secret)
     |> HppEncodable.encode
