@@ -10,14 +10,7 @@ defmodule RxpHpp.StructKeyMapper do
   """
   def from(origin, default) do
     origin
-    |> Helper.keys
-    |> Enum.reduce(
-        default,
-        fn (field, result) ->
-          value = Map.get(origin, field)
-          Map.put result, Helper.upcase_atom(field), value
-        end
-      )
+    |> map_struct_and_key(default, &Helper.upcase_atom/1)
   end
 
   @doc """
@@ -25,12 +18,16 @@ defmodule RxpHpp.StructKeyMapper do
   """
   def to(origin, default) do
     origin
+    |> map_struct_and_key(default, &Helper.downcase_atom/1)
+  end
+
+  def map_struct_and_key(origin, default, func) do
+    origin
     |> Helper.keys
     |> Enum.reduce(
         default,
         fn (field, result) ->
-          value = Map.get(origin, field)
-          Map.put result, Helper.downcase_atom(field), value
+          Map.put result, func.(field), Map.get(origin, field)
         end
       )
   end
