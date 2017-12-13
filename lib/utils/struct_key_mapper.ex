@@ -5,30 +5,21 @@ defmodule RxpHpp.StructKeyMapper do
   """
 
   @doc """
-  Returns a struct trying to upcase all the keys
-
+  Map a struct `origin` to another `base` applying `func` to each key
   """
-  def from(origin, default) do
-    origin
-    |> map_struct_and_key(default, &Helper.upcase_atom/1)
+
+  def map_struct_with_keys(origin, type, func) do
+    struct type, map_keys(origin, func)
   end
 
-  @doc """
-  Returns a struct trying to downcase all the keys
-  """
-  def to(origin, default) do
-    origin
-    |> map_struct_and_key(default, &Helper.downcase_atom/1)
-  end
-
-  def map_struct_and_key(origin, default, func) do
+  def map_keys(origin, func) do
     origin
     |> Helper.keys
     |> Enum.reduce(
-        default,
+        %{},
         fn (field, result) ->
           Map.put result, func.(field), Map.get(origin, field)
         end
       )
-  end
+    end
 end

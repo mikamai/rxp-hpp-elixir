@@ -5,6 +5,7 @@ defmodule RxpHpp do
   alias RxpHpp.ResponseJsonWrapper
   alias RxpHpp.Encodable
   alias RxpHpp.StructKeyMapper
+  alias RxpHpp.StructKeyMapper.Helper
   @moduledoc """
   Allow to create / parse requests and response
   """
@@ -16,7 +17,7 @@ defmodule RxpHpp do
     hpp_request
     |> Request.build_hash(secret)
     |> Encodable.encode
-    |> StructKeyMapper.from(%Request{})
+    |> StructKeyMapper.map_struct_with_keys(RequestJsonWrapper, &Helper.upcase_atom/1)
     |> Poison.encode!
   end
 
@@ -32,7 +33,7 @@ defmodule RxpHpp do
   def request_from_json(out_hpp_request, false) do
     out_hpp_request
     |> Poison.decode!(as: %RequestJsonWrapper{})
-    |> StructKeyMapper.to(%Request{})
+    |> StructKeyMapper.map_struct_with_keys(Request, &Helper.downcase_atom/1)
   end
 
   @doc """
@@ -42,7 +43,7 @@ defmodule RxpHpp do
     hpp_response
     |> Response.build_hash(secret)
     |> Encodable.encode
-    |> StructKeyMapper.from(%Response{})
+    |> StructKeyMapper.map_struct_with_keys(ResponseJsonWrapper, &Helper.upcase_atom/1)
     |> Poison.encode!
   end
 
@@ -58,6 +59,6 @@ defmodule RxpHpp do
   def response_from_json(out_hpp_response, false) do
     out_hpp_response
     |> Poison.decode!(as: %ResponseJsonWrapper{})
-    |> StructKeyMapper.to(%Response{})
+    |> StructKeyMapper.map_struct_with_keys(Response, &Helper.downcase_atom/1)
   end
 end

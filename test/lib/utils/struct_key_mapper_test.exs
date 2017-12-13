@@ -1,11 +1,21 @@
 defmodule RxpHpp.StructKeyMapperTest do
   use ExUnit.Case
   import TestHelper
+  alias RxpHpp.StructKeyMapper
+  alias RxpHpp.StructKeyMapper.Helper
+  alias RxpHpp.Response
+  alias RxpHpp.ResponseJsonWrapper
+  alias RxpHpp.Request
+  alias RxpHpp.RequestJsonWrapper
 
-  test "from transform an Request to a RxpHpp.RequestJsonWrapper" do
+  test "map_struct_with_keys transform an Request to a RxpHpp.RequestJsonWrapper" do
     hpp_request = valid_hpp_request()
-    actual = RxpHpp.StructKeyMapper.from hpp_request, %RxpHpp.RequestJsonWrapper{}
-    expected = %RxpHpp.RequestJsonWrapper{
+    actual = StructKeyMapper.map_struct_with_keys(
+      hpp_request,
+      RequestJsonWrapper,
+      &Helper.upcase_atom/1
+    )
+    expected = %RequestJsonWrapper{
       json_wrapped_valid_hpp_request() |
       HPP_FRAUD_FILTER_MODE: "",
       HPP_SELECT_STORED_CARD: "",
@@ -14,17 +24,25 @@ defmodule RxpHpp.StructKeyMapperTest do
     assert actual == expected
   end
 
-  test "from transform an Response to a RxpHpp.ResponseJsonWrapper" do
+  test "map_struct_with_keys transform an Response to a RxpHpp.ResponseJsonWrapper" do
     hpp_response = valid_hpp_response()
-    actual = RxpHpp.StructKeyMapper.from hpp_response, %RxpHpp.ResponseJsonWrapper{}
+    actual = StructKeyMapper.map_struct_with_keys(
+      hpp_response,
+      ResponseJsonWrapper,
+      &Helper.upcase_atom/1
+    )
     expected = json_wrapped_valid_hpp_response()
     assert actual == expected
   end
 
-  test "to transform an RxpHpp.RequestJsonWrapper to an Request" do
+  test "map_struct_with_keys transform an RxpHpp.RequestJsonWrapper to an Request" do
     json_wrapped_hpp_request = json_wrapped_valid_hpp_request()
-    actual = RxpHpp.StructKeyMapper.to json_wrapped_hpp_request, %RxpHpp.Request{}
-    expected = %RxpHpp.Request{
+    actual = StructKeyMapper.map_struct_with_keys(
+      json_wrapped_hpp_request,
+      Request,
+      &Helper.downcase_atom/1
+    )
+    expected = %Request{
       valid_hpp_request() |
       hpp_fraud_filter_mode: nil,
       hpp_select_stored_card: nil,
@@ -33,9 +51,13 @@ defmodule RxpHpp.StructKeyMapperTest do
     assert actual == expected
   end
 
-  test "to transform an RxpHpp.ResponseJsonWrapper to a Response" do
+  test "map_struct_with_keys transform an RxpHpp.ResponseJsonWrapper to a Response" do
     json_wrapped_hpp_response = json_wrapped_valid_hpp_response()
-    actual = RxpHpp.StructKeyMapper.to json_wrapped_hpp_response, %RxpHpp.Response{}
+    actual = StructKeyMapper.map_struct_with_keys(
+      json_wrapped_hpp_response,
+      Response,
+      &Helper.downcase_atom/1
+    )
     expected = valid_hpp_response()
     assert actual == expected
   end

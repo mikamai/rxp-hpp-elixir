@@ -1,6 +1,9 @@
 ExUnit.start()
 
 defmodule TestHelper do
+  alias RxpHpp.StructKeyMapper
+  alias RxpHpp.StructKeyMapper.Helper
+
   def valid_hpp_request(with_card_storage)do
     if with_card_storage do
       %RxpHpp.Request{valid_hpp_request() | card_storage_enable: "1", offer_save_card: "1"}
@@ -42,7 +45,11 @@ defmodule TestHelper do
   end
 
   def json_wrapped_valid_hpp_request do
-    request = RxpHpp.StructKeyMapper.from valid_hpp_request(), %RxpHpp.RequestJsonWrapper{}
+    request = StructKeyMapper.map_struct_with_keys(
+      valid_hpp_request(),
+      RxpHpp.RequestJsonWrapper,
+      &Helper.upcase_atom/1
+    )
     %RxpHpp.RequestJsonWrapper{
       request |
       HPP_FRAUD_FILTER_MODE: nil,
@@ -84,7 +91,11 @@ defmodule TestHelper do
   end
 
   def json_wrapped_encoded_hpp_request do
-    request = RxpHpp.StructKeyMapper.from encoded_hpp_request(), %RxpHpp.RequestJsonWrapper{}
+    request = StructKeyMapper.map_struct_with_keys(
+      encoded_hpp_request(),
+      RxpHpp.RequestJsonWrapper,
+      &Helper.upcase_atom/1
+    )
     %RxpHpp.RequestJsonWrapper{
       request |
       HPP_FRAUD_FILTER_MODE: nil,
@@ -116,7 +127,11 @@ defmodule TestHelper do
   end
 
   def json_wrapped_valid_hpp_response do
-    RxpHpp.StructKeyMapper.from valid_hpp_response(), %RxpHpp.ResponseJsonWrapper{}
+    StructKeyMapper.map_struct_with_keys(
+      valid_hpp_response(),
+      RxpHpp.ResponseJsonWrapper,
+      &Helper.upcase_atom/1
+    )
   end
 
   def encoded_hpp_response do
@@ -142,6 +157,10 @@ defmodule TestHelper do
   end
 
   def json_wrapped_encoded_hpp_response do
-    RxpHpp.StructKeyMapper.from encoded_hpp_response(), %RxpHpp.ResponseJsonWrapper{}
+    StructKeyMapper.map_struct_with_keys(
+      encoded_hpp_response(),
+      RxpHpp.ResponseJsonWrapper,
+      &Helper.upcase_atom/1
+    )
   end
 end
