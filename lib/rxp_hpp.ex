@@ -1,4 +1,5 @@
 defmodule RxpHpp do
+  alias RxpHpp.Common
   alias RxpHpp.Request
   alias RxpHpp.Response
   alias RxpHpp.RequestJsonWrapper
@@ -22,17 +23,18 @@ defmodule RxpHpp do
   end
 
   @doc """
-  Returns a decoded `RxpHpp.Response` from its JSON rappresentation.
+  Returns a decoded `RxpHpp.Response` from a map.
   """
-  def request_from_json(out_hpp_request, true) do
+  def request_from_map(out_hpp_request, true) do
     out_hpp_request
-    |> request_from_json(false)
+    |> request_from_map(false)
     |> Encodable.decode
   end
 
-  def request_from_json(out_hpp_request, false) do
+  def request_from_map(out_hpp_request, false) do
     out_hpp_request
-    |> Poison.decode!(as: %RequestJsonWrapper{})
+    |> Map.new(&Helper.atomize_key/1)
+    |> Common.struct2(RequestJsonWrapper)
     |> StructKeyMapper.map_struct_with_keys(Request, &Helper.downcase_atom/1)
   end
 
@@ -48,17 +50,18 @@ defmodule RxpHpp do
   end
 
   @doc """
-  Returns a decoded `RxpHpp.Response` from its JSON rappresentation.
+  Returns a decoded `RxpHpp.Response` from a map.
   """
-  def response_from_json(out_hpp_response, true) do
+  def response_from_map(out_hpp_response, true) do
     out_hpp_response
-    |> response_from_json(false)
+    |> response_from_map(false)
     |> Encodable.decode
   end
 
-  def response_from_json(out_hpp_response, false) do
+  def response_from_map(out_hpp_response, false) do
     out_hpp_response
-    |> Poison.decode!(as: %ResponseJsonWrapper{})
+    |> Map.new(&Helper.atomize_key/1)
+    |> Common.struct2(ResponseJsonWrapper)
     |> StructKeyMapper.map_struct_with_keys(Response, &Helper.downcase_atom/1)
   end
 end

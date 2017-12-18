@@ -1,5 +1,4 @@
 defmodule RxpHpp.StructKeyMapper do
-  alias RxpHpp.StructKeyMapper.Helper
   @moduledoc """
   Convert structs upcasing / downcasing the keys
   """
@@ -14,12 +13,7 @@ defmodule RxpHpp.StructKeyMapper do
 
   def map_keys(origin, func) do
     origin
-    |> Helper.keys
-    |> Enum.reduce(
-        %{},
-        fn (field, result) ->
-          Map.put result, func.(field), Map.get(origin, field)
-        end
-      )
-    end
+    |> Map.from_struct
+    |> Map.new(fn {key, value} -> {func.(key), value} end)
+  end
 end

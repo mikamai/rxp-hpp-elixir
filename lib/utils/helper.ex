@@ -45,6 +45,15 @@ defmodule RxpHpp.StructKeyMapper.Helper do
     map_atom field, &String.downcase/1
   end
 
+
+  def atomize_key({k, v}) do
+    if is_atom(k) do
+      {k, v}
+    else
+      {String.to_atom(k), v}
+    end
+  end
+
   defp map_atom(field, func) do
     field
     |> Atom.to_string

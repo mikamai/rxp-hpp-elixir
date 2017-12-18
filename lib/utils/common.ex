@@ -18,4 +18,8 @@ defmodule RxpHpp.Common do
   def value_or_default(value, default \\ "") do
     value || default
   end
+
+  def struct2(map, type) do
+    struct type, map
+  end
 end

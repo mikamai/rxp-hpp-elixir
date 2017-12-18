@@ -1,5 +1,5 @@
 defmodule RxpHpp.Encodable do
-  alias RxpHpp.StructKeyMapper.Helper
+  alias RxpHpp.Common
 
   @moduledoc """
   Encodable hold common behaviour applied
@@ -22,6 +22,7 @@ defmodule RxpHpp.Encodable do
   def encode(encodable) do
     encodable
     |> apply_to_all(&Base.encode64/1)
+    |> Common.struct2(encodable.__struct__)
   end
 
   @doc """
@@ -38,23 +39,15 @@ defmodule RxpHpp.Encodable do
   def decode(encodable) do
     encodable
     |> apply_to_all(&Base.decode64!(&1, padding: false))
+    |>Common.struct2(encodable.__struct__)
   end
 
   defp apply_to_all(encodable, enc_func) do
-    Enum.reduce(
-      Helper.keys(encodable),
-      encodable,
-      fn(field, encoded_encodable) ->
-        {_, result} = Map.get_and_update(
-          encoded_encodable,
-          field,
-          fn
-            value when value == nil -> {value, nil}
-            value -> {value, enc_func.("#{value}")}
-          end
-         )
-        result
-      end
-    )
+    encodable
+    |> Map.from_struct
+    |> Map.new(fn
+        {key, nil} -> {key, nil}
+        {key, value} ->  {key, enc_func.("#{value}")}
+      end)
   end
 end
