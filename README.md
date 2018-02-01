@@ -17,7 +17,7 @@ end
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/rxp_hpp_elixir](https://hexdocs.pm/rxp_hpp_elixir).
+be found at [https://hexdocs.pm/rxp_hpp](https://hexdocs.pm/rxp_hpp).
 
 ## Test
 
