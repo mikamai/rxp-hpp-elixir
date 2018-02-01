@@ -7,7 +7,9 @@ defmodule RxpHpp.Mixfile do
       version: "0.1.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      deps: deps(),
+      description: description(),
+      package: package()
     ]
   end
 
@@ -26,6 +28,20 @@ defmodule RxpHpp.Mixfile do
       {:secure_random, "~> 0.5"},
       {:ex_doc, "~> 0.16", only: :dev, runtime: false},
       {:poison, "~> 3.1"}
+    ]
+  end
+
+  defp description do
+    "Elixir SDK to encrypt / decrypt Realex HPP requests and responses."
+  end
+
+  defp package do
+    [
+      name: "rxp_hpp",
+      files: ["lib", "mix.exs", "README*"],
+      maintainers: ["Alberto Pellizzon"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/apellizzn/rxp-hpp-elixir"}
     ]
   end
 end
